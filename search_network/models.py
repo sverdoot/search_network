@@ -37,6 +37,12 @@ class Person(db.Entity):
     in_waiting_list = Set('Project', reverse='requested_by', nullable=True)
     areas = Set('Area')
 
+    def get_skills():
+        skill_names = []
+        for skill in skills:
+            skill_names.append(skill.name)
+        return skill_names
+
 
 class Idea(db.Entity):
     id = PrimaryKey(int, auto=True)
@@ -87,6 +93,7 @@ db.generate_mapping(create_tables=True)
 
 @db_session
 def populate_database():
+    if select(s for s in Person).count() > 0:return
     import pandas as pd
     columns = ['id', 'Name', 'mail', 'dunno', 'dept', 'role', 'skills']
     df = pd.read_csv('Employees.csv', names=columns, index_col=0)
@@ -95,7 +102,7 @@ def populate_database():
     all_skills = []
 
     for _, row in df.iterrows():
-        print(row['skills'])
+        #print(row['skills'])
         name = row['Name'].split(' ')
         mail = row['mail']
         dept = row['dept']
@@ -105,7 +112,7 @@ def populate_database():
             departments.append(Department(name=dept))
         for skill in skills:
             if select(s for s in Skill).count() == 0 or Skill.get(name=skill) is None:
-                print(skill)
+                #print(skill)
                 all_skills.append(Skill(name=skill))
         department = select(d for d in Department if d.name == dept)[:][0]
         employees.append(Person(name=name[0], surname=name[1], mail=mail, department=department, areas=[], skills=select(s for s in Skill if s.name in skills)[:]))
