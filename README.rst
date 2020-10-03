@@ -1,4 +1,5 @@
-# NVIDIA X Skoltech Hackaton Solution by SHREK2 team
+NVIDIA X Skoltech Hackaton Solution by SHREK2 team
+--------------------------------------------------
 
 
 Install
