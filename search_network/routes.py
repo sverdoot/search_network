@@ -148,11 +148,9 @@ def new_project():
         else:
             projectimage_file = None   
         project = Project(name=form.title.data, content=form.content.data) #, image=projectimage_file )
-        print('hi1')
         db.commit()
         #db.session.add(project)
         #db.session.commit()
-        print('hi2')
         flash('Your project has been created!', 'success')                    
         return redirect(url_for('home'))
     return render_template('New_project.html' , title='New project' , form=form , legend='Create project')
@@ -269,8 +267,9 @@ def idea(person_id):
 
 
 @app.route("/search")
+#@login_required
 def search(): 
-    query = request.args.get('search' , '' )
+    query = request.args.get('search', '')
     query = query.split(',') #Example:  Peter, persons True, projects False, ideas False, skills python linux
     name = query[0]
     features = [x.split() for x in query[1:]]
@@ -279,40 +278,37 @@ def search():
         k = list_[0]
         features_[k] = list_[1:]
 
-    skills = features_['skills'] if 'skills' in features_.keys() else None
-    areas = features_['areas'] if 'areas' in features_.keys() else None
-    department = feature['department'] if 'department' in features_.keys() else None
+    skills = features_['skills'] if 'skills' in features_.keys() else []
+    areas = features_['areas'] if 'areas' in features_.keys() else []
+    department = features_['department'] if 'department' in features_.keys() else None
     print(name, skills, areas, department)
 
     full_select = []
-    if 'persons' not in features_.keys() or features_['persons'] == True:
-        with pony.orm.db_session:
-            persons = select(p for p in Person if (name == 'none' or name == p.name) #and 
-                # (skills is None or set(skills).intersection(p.skills.name)) and
-                # (areas is None or set(areas).intersect(p.areas.name)) and
-                # (department is None or set(department).intersect(p.department.name))
-                )      
-            full_select.extend(persons)
-            print(full_select)
-    print([p.name for p in full_select])
-    # if 'projects' not in features_.keys() or features_['projects'] == True:
-    #     with pony.orm.db_session:
-    #         projects = select(p for p in Project if (name == 'none' or name == p.name) and
-    #             (skills is None or skills == p.get_skills()) and
-    #             (areas is None or areas == p.areas) and
-    #             (department is None or department == p.department)
-    #             )
-    #         full_select.extend(projects)
-    # if 'ideas' not in features_.keys() or features_['ideas'] == True:
-    #     with pony.orm.db_session:
-    #         ideas = select(p for p in Idea if (name == 'none' or name == p.name) and
-    #             (skills is None or skills == p.skills) and
-    #             (areas is None or areas == p.areas) and
-    #             (department is None or department == p.department)
-    #             )
-    #         full_select.extend(ideas)
-    #print(full_select)
-    return render_template('search.html' , full_select=full_select)
+    if 'persons' not in features_.keys() or features_['persons']:
+        persons = select(p for p in Person if (name == 'none' or name == p.name) and
+                         ((not skills) or (p.skills.select(lambda x: x.name in skills).count() > 0)) and
+                         ((not areas) or (p.areas.select(lambda x: x.name in areas).count() > 0)) and
+                         ((department is None) or department == p.department.name)
+                         )[:]
+        full_select.extend(persons)
+        print(full_select)
+    if 'projects' not in features_.keys() or features_['projects']:
+        projects = select(p for p in Project if (name == 'none' or name == p.name) and
+                          ((not skills) or (p.skills.select(lambda x: x.name in skills).count() > 0)) and
+                          ((not areas) or (p.areas.select(lambda x: x.name in areas).count() > 0)) and
+                          ((department is None) or department == p.department.name)
+                          )[:]
+        full_select.extend(projects)
+    if 'ideas' not in features_.keys() or features_['ideas']:
+        ideas = select(p for p in Idea if (name == 'none' or name == p.name) and
+                       ((not skills) or (p.skills.select(lambda x: x.name in skills).count() > 0)) and
+                       ((not areas) or (p.areas.select(lambda x: x.name in areas).count() > 0)) and
+                       ((department is None) or department == p.department.name)
+                       )[:]
+        full_select.extend(ideas)
+    print(full_select)
+    return render_template('search.html', full_select=full_select)
+
 
 
 # @app.route("/chats")
