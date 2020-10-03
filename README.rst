@@ -1,7 +1,4 @@
-|NVIDIA X Skoltech Hackaton Solution by SHREK2 team|
-
-
-- Documentation: https://jonaprieto.github.io/flask-ponywhoosh/
+# NVIDIA X Skoltech Hackaton Solution by SHREK2 team
 
 
 Install
