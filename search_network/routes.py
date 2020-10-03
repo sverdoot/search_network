@@ -2,10 +2,9 @@ import os , json
 import functools
 import secrets
 from PIL import Image
-from search_network.form import SearchForm #RegistrationForm , LoginForm, UpdateForm, NewPostForm, SearchForm, ResetPasswordForm, RequestResetForm, NewStoryForm, ChattingForm
-#from flask_login import login_user, current_user, logout_user, login_required , LoginManager , UserMixin
+from search_network.form import SearchForm, NewProjectForm, NewIdeaForm
 from flask import Flask,  render_template , url_for , redirect , flash, request, abort , jsonify
-from search_network.models import Person, Project, Idea, Department #, Post, Chats, followers, requests, liking , Story
+from search_network.models import Person, Project, Idea, Department
 from search_network import app, db, socketio, mail, bcrypt, mobility
 from flask_socketio import send , disconnect
 from flask_mail import Message
@@ -137,50 +136,58 @@ def save_picture(form_picture,x,y,folder):
 #         nbrfollowing = followingn ) 
 
 
-# @app.route("/posts/new" , methods=[ 'POST' , 'GET'])
-# @login_required
-# def new_post():
-#     form = NewPostForm()
-#     if form.validate_on_submit():
-#         if form.image.data:
-#            postimage_file = save_picture(form.image.data, 500 , 500 , 'post_pictures')
-#         else:
-#             postimage_file = None   
-#         post = Post(title=form.title.data, content=form.content.data, author=current_user, image=postimage_file )
-#         db.session.add(post)
-#         db.session.commit()
-#         flash('Your post has been created!', 'success')                    
-#         return redirect(url_for('home'))
-#     return render_template('New_post.html' , title='New post' , form=form , legend='Create post')   
+@app.route("/projects")
+@app.route("/projects/new" , methods=[ 'POST' , 'GET'])
+#@login_required
+def new_project():
+    form = NewProjectForm()
+    if form.validate_on_submit():
+        if form.image.data:
+           projectimage_file = save_picture(form.image.data, 500 , 500 , 'project_pictures')
+        else:
+            projectimage_file = None   
+        project = Project(title=form.title.data, content=form.content.data, author=current_user, image=postimage_file )
+        db.session.add(project)
+        db.session.commit()
+        flash('Your project has been created!', 'success')                    
+        return redirect(url_for('home'))
+    return render_template('New_project.html' , title='New project' , form=form , legend='Create project')
 
 
-# @app.route("/stories/new" , methods=[ 'POST' , 'GET'])
-# @login_required
-# def new_story():
-#     form = NewStoryForm()
-#     if form.validate_on_submit():
-#         if form.image.data:
-#            postimage_file = save_picture(form.image.data, 500 , 500 , 'story_pictures')
-#         else:
-#            flash('Login Unsuccessful. Please check email and password', 'danger') 
-#         story = Story(poster=current_user, media=postimage_file )
-#         db.session.add(story)
-#         db.session.commit()
-#         flash('Your story has been created!', 'success')                    
-#         return redirect(url_for('home'))
-#     return render_template('new_story.html' , title='New post' , form=form , legend='Create story')   
+@app.route("/projects")
+@app.route("/ideas/new" , methods=[ 'POST' , 'GET'])
+#@login_required
+def new_idea():
+    form = NewIdeaForm()
+    if form.validate_on_submit():
+        if form.image.data:
+           ideaimage_file = save_picture(form.image.data, 500 , 500 , 'idea_pictures')
+        else:
+            ideaimage_file = None   
+        idea = Idea(title=form.title.data, content=form.content.data, author=current_user, image=postimage_file )
+        db.session.add(idea)
+        db.session.commit()
+        flash('Your idea has been created!', 'success')                    
+        return redirect(url_for('home'))
+    return render_template('New_idea.html' , title='New idea' , form=form , legend='Create idea')    
 
 
-@app.route("/posts/<int:post_id>")
-def post(post_id):
-    post = Post.query.get_or_404(post_id)
-    return render_template( 'post.html' , title=post.title , post=post)
+@app.route("/projects/<int:project_id>")
+def project(project_id):
+    project = Project.query.get_or_404(project_id)
+    return render_template( 'project.html' , name=project.name , project=project)
 
 
-@app.route("/stories/<int:sid>")
-def story(sid):
-    story = Story.query.get_or_404(sid)
-    return render_template('story.html' , story=story)
+@app.route("/persons/<int:person_id>")
+def person(person_id):
+    person = Person.query.get_or_404(person_id)
+    return render_template( 'person.html' , name=person.name , person=person)
+
+
+@app.route("/ideas/<int:idea_id>")
+def idea(person_id):
+    idea = Idea.query.get_or_404(idea_id)
+    return render_template( 'idea.html' , name=idea.name , idea=idea)
 
 
 
@@ -254,9 +261,8 @@ def story(sid):
 #         nbrfollowing = followingn,
 #         postsview=postsview)  
 
-#@db_session
+
 @app.route("/search")
-#@login_required
 def search(): 
     query = request.args.get('search' , '' )
     query = query.split(',') #Example:  Peter, persons True, projects False, ideas False, skills python linux
@@ -275,10 +281,10 @@ def search():
     full_select = []
     if 'persons' not in features_.keys() or features_['persons'] == True:
         with pony.orm.db_session:
-            persons = select(p for p in Person if (name == 'none' or name == p.name) and 
-                (skills is None or set(skills).intersection(p.skills.name))# and
-                # (areas is None or set(areas).intersection(p.areas.name)) and
-                # (department is None or set(department).intersection(p.department.name))
+            persons = select(p for p in Person if (name == 'none' or name == p.name) #and 
+                # (skills is None or set(skills).intersection(p.skills.name)) and
+                # (areas is None or set(areas).intersect(p.areas.name)) and
+                # (department is None or set(department).intersect(p.department.name))
                 )      
             full_select.extend(persons)
             print(full_select)
