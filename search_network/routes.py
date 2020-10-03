@@ -139,6 +139,7 @@ def save_picture(form_picture,x,y,folder):
 @app.route("/projects")
 @app.route("/projects/new" , methods=[ 'POST' , 'GET'])
 #@login_required
+@db_session
 def new_project():
     form = NewProjectForm()
     if form.validate_on_submit():
@@ -146,17 +147,21 @@ def new_project():
            projectimage_file = save_picture(form.image.data, 500 , 500 , 'project_pictures')
         else:
             projectimage_file = None   
-        project = Project(title=form.title.data, content=form.content.data, author=current_user, image=postimage_file )
-        db.session.add(project)
-        db.session.commit()
+        project = Project(name=form.title.data, content=form.content.data) #, image=projectimage_file )
+        print('hi1')
+        db.commit()
+        #db.session.add(project)
+        #db.session.commit()
+        print('hi2')
         flash('Your project has been created!', 'success')                    
         return redirect(url_for('home'))
     return render_template('New_project.html' , title='New project' , form=form , legend='Create project')
 
 
-@app.route("/projects")
+@app.route("/ideas")
 @app.route("/ideas/new" , methods=[ 'POST' , 'GET'])
 #@login_required
+@db_session
 def new_idea():
     form = NewIdeaForm()
     if form.validate_on_submit():
@@ -164,9 +169,10 @@ def new_idea():
            ideaimage_file = save_picture(form.image.data, 500 , 500 , 'idea_pictures')
         else:
             ideaimage_file = None   
-        idea = Idea(title=form.title.data, content=form.content.data, author=current_user, image=postimage_file )
-        db.session.add(idea)
-        db.session.commit()
+        idea = Idea(name=form.title.data, content=form.content.data) #, image=ideaimage_file )
+        db.commit()
+        #db.session.add(idea)
+        #db.session.commit()
         flash('Your idea has been created!', 'success')                    
         return redirect(url_for('home'))
     return render_template('New_idea.html' , title='New idea' , form=form , legend='Create idea')    
