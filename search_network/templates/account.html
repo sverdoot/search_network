@@ -1,0 +1,124 @@
+{% extends "layout.html" %}
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="/{{ url_for('static' , filename='main.js')}}">
+</script>
+    <div class="content-section" style="background-color: #f2d4bc ; border: solid #dc5379;">
+      <div class="media"> 
+        <div class="media-body">
+            <img class="rounded-circle account-img" src="{{ image_file }}" style=" position: relative ; left: 275px;"> 
+          </br>
+          {% if user != current_user %}
+            <a class="btn btn-primary btn-lg" id="status" href="{{ url_for('chat' , user_id=user.id ) }}"> chat with {{ user.username}} </a></br></br>
+          {% endif %}
+          <h2 class="account-heading" style="">{{ user.username }}</h2>
+          <p class="text-secondary" style=""> Following: {{nbrfollowing}}</br> Followers: {{nbrfollowers}} 
+          </p>
+          <p class="text-secondary" style="">{{ user.email }}
+          </p>         
+        </div>
+    </div>
+         <form method="POST" action="" style="" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group" style="">
+{% if user == current_user %}
+                <a class="btn btn-primary btn-lg" href="{{ url_for('private' ,private_id= user.id) }}">{{ private_or_not }}</a> </br></br>
+                {% endif %}
+                <legend class="border-bottom mb-4" style="color:#707171;"> {% if user == current_user %}Update your info {% else %} {{ user.username }}: Profile {% endif %}</legend> 
+                <div class="form-group" style="color:#707171;" >
+                    {% if user == current_user %}
+                    {{ form.username.label(class="form-control-label") }}
+                    {% if form.username.errors %}
+                        {{ form.username(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.username.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.username(class="form-control form-control-lg") }}
+                    {% endif %}
+                    {% else %}
+                  <a class="btn btn-primary btn-lg" href="{{ url_for('following' ,followed_id= user.id) }}" id="follow">{{ followed_or_not }}</a>
+                    {% endif %}
+                </div>
+                <div class="form-group" style="color:#707171;">
+                    {% if user == current_user %}
+                    {{ form.email.label(class="form-control-label") }}
+                    {% if form.email.errors %}
+                        {{ form.email(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.email(class="form-control form-control-lg") }}
+                    {% endif %}
+                    {% else %}
+                    <h3>Email: </h3></br>
+                    <h4>{{user.email}}</h4> 
+                    {% endif %}
+                </div> </br>
+                {% if user == current_user %}
+                 <div class="form-group" style="color:#707171;">
+                    {{ form.picture.label() }}
+                    {{ form.picture(class="form-control-file") }}
+                    {% if form.picture.errors %}
+                        {% for error in form.picture.errors %}
+                            <span class="text-danger">{{ error }}</span></br>
+                        {% endfor %}
+                    {% endif %}
+                 </div>
+            </fieldset>
+            <div class="form-group" style="">
+                {{ form.submit(class="btn btn-outline-info" , style="color:white; position:sticky; left: 20%; background-color:#006666;") }}
+            </div>
+            {% endif %}
+        </form>
+    </div>
+    
+    {% if user == current_user %}
+<a class="btn btn-primary btn-sm mt-1 mb-2" href="{{ url_for('new_post') }}">New post</a>
+    {% endif %}
+        {% if postsview == True or user == current_user %}
+        {% for post in posts.items %}
+        <article class="media content-section">
+          <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{{ url_for('user_account' , username= post.author.username) }}">{{ post.author.username }}</a>
+              <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <h2><a class="article-title" href="{{ url_for('post' , post_id=post.id) }}">{{ post.title }}</a></h2>
+            <p class="article-content" style="color: #707171 ; ">{{ post.content }}</p>
+           {% if post.image  %}
+            <img class="" src="/static/post_pictures/{{ post.image }}">
+            {% endif %}
+            </br> </br> 
+            <section id="like" class="rating">
+  <label id="nbr" style="color : red;" > {{post.number_of_reactions}} </label>
+  <input type="radio" id="heart_1" name="like" value="0" onchange="likehandle($(this).val(),{{ post.id }} , {{ current_user.id }});" />
+  {% if post in liked %}
+  <label for="heart_1" title="One" style="color:red;">&#10084;</label>
+  {% else %}
+  <label for="heart_1" title="One">&#10084;</label>
+  {% endif %}
+          </div>
+        </article>
+        {% endfor %}
+         {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if posts.page == page_num %}
+          <a class="btn btn-info mb-4" href="{{ url_for('user_account', username= user.username , page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('user_account', username= user.username, page=page_num) }}">{{ page_num }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+        {% endfor %}
+    {% else %}
+    <h2 >  {{ user.username }} is Private you need to follow him in order to see his posts</h2>    
+    {% endif %}
+{% endblock content %}

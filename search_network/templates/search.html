@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block content %}
+{% if user %}
+<article class="media content-section">
+             <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}">
+          <div class="media-body">
+                          <a class="mr-2" href="{{ url_for('user_account' , username= user.username) }}">{{ user.username }}</a>
+<h2><a class="article-title" >{{ user.username }}</a></h2>
+            <p class="article-content" style="color: #707171 ; "> oops! </p>
+          </div>
+        </article>
+{% else %}
+<article class="media content-section">
+          <div class="media-body">
+<h2><a class="article-title" >Sorry no one matches with the username searched!</a></h2>
+            <p class="article-content" style="color: #707171 ; "> oops! </p>
+          </div>
+        </article>
+{% endif %}      
+{% endblock content %}
