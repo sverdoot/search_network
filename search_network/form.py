@@ -25,7 +25,7 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextA
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 #from flask_login import current_user
-from search_network import Person, Project, Idea, Department, Area
+from search_network.models import Person, Project, Idea, Department, Area
 
 
 # class SearchForm(FlaskForm):

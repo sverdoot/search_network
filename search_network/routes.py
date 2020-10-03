@@ -5,7 +5,7 @@ from PIL import Image
 from search_network.form import SearchForm #RegistrationForm , LoginForm, UpdateForm, NewPostForm, SearchForm, ResetPasswordForm, RequestResetForm, NewStoryForm, ChattingForm
 #from flask_login import login_user, current_user, logout_user, login_required , LoginManager , UserMixin
 from flask import Flask,  render_template , url_for , redirect , flash, request, abort , jsonify
-from search_network import Person, Project, Idea, Department #, Post, Chats, followers, requests, liking , Story
+from search_network.models import Person, Project, Idea, Department #, Post, Chats, followers, requests, liking , Story
 from search_network import app, db, socketio, mail, bcrypt, mobility
 from flask_socketio import send , disconnect
 from flask_mail import Message
@@ -274,26 +274,30 @@ def search():
     full_select = []
     if 'persons' not in features_.keys() or features_['persons'] == True:
         with pony.orm.db_session:
-            persons = select(p for p in Person if (skills is None or skills == p.skills) and
+            persons = select(p for p in Person if (name == 'none' or name == p.name) and
+                (skills is None or skills == p.skills) and
                 (areas is None or areas == p.areas) and
                 (department is None or department == p.department)
                 )      
             full_select.extend(persons)
+            print(full_select)
     if 'projects' not in features_.keys() or features_['projects'] == True:
         with pony.orm.db_session:
-            projects = select(p for p in Project if (skills is None or skills == p.skills) and
+            projects = select(p for p in Project if (name == 'none' or name == p.name) and
+                (skills is None or skills == p.skills) and
                 (areas is None or areas == p.areas) and
                 (department is None or department == p.department)
                 )
             full_select.extend(projects)
     if 'ideas' not in features_.keys() or features_['ideas'] == True:
         with pony.orm.db_session:
-            ideas = select(p for p in Idea if (skills is None or skills == p.skills) and
+            ideas = select(p for p in Idea if (name == 'none' or name == p.name) and
+                (skills is None or skills == p.skills) and
                 (areas is None or areas == p.areas) and
                 (department is None or department == p.department)
                 )
             full_select.extend(ideas)
-    
+    print(full_select)
     return render_template('search.html' , full_select=full_select)
 
 
