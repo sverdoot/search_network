@@ -270,15 +270,16 @@ def search():
     skills = features_['skills'] if 'skills' in features_.keys() else None
     areas = features_['areas'] if 'areas' in features_.keys() else None
     department = feature['department'] if 'department' in features_.keys() else None
+    print(name, skills, areas, department)
 
     full_select = []
     if 'persons' not in features_.keys() or features_['persons'] == True:
         with pony.orm.db_session:
-            persons = select(p for p in Person if (name == 'none' or name == p.name) and
-                (skills is None or skills == p.skills) and
-                (areas is None or areas == p.areas) and
-                (department is None or department == p.department)
-                )      
+            persons = select(p for p in Person if (name == 'none' or name == p.name))# and
+                # (skills is None or skills == p.skills) and
+                # (areas is None or areas == p.areas) and
+                # (department is None or department == p.department)
+                # )      
             full_select.extend(persons)
             print(full_select)
     if 'projects' not in features_.keys() or features_['projects'] == True:
