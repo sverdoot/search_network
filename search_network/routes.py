@@ -259,15 +259,14 @@ def story(sid):
 #@login_required
 def search(): 
     query = request.args.get('search' , '' )
-    #filters = filters
-    query = query.split(',')
+    query = query.split(',') #Example:  Peter, persons True, projects False, ideas False, skills python linux
     name = query[0]
     features = [x.split() for x in query[1:]]
     features_ = {}
-    for k, v in features:
-        features_[k] = v
+    for list_ in features:
+        k = list_[0]
+        features_[k] = list_[1:]
 
-    #search_persons = True 'persons' in 
     skills = features_['skills'] if 'skills' in features_.keys() else None
     areas = features_['areas'] if 'areas' in features_.keys() else None
     department = feature['department'] if 'department' in features_.keys() else None
@@ -278,24 +277,23 @@ def search():
             persons = select(p for p in Person if (skills is None or skills == p.skills) and
                 (areas is None or areas == p.areas) and
                 (department is None or department == p.department)
-                )
-        full_select.extend(persons)
+                )      
+            full_select.extend(persons)
     if 'projects' not in features_.keys() or features_['projects'] == True:
         with pony.orm.db_session:
             projects = select(p for p in Project if (skills is None or skills == p.skills) and
                 (areas is None or areas == p.areas) and
                 (department is None or department == p.department)
                 )
-        full_select.extend(projects)
+            full_select.extend(projects)
     if 'ideas' not in features_.keys() or features_['ideas'] == True:
         with pony.orm.db_session:
             ideas = select(p for p in Idea if (skills is None or skills == p.skills) and
                 (areas is None or areas == p.areas) and
                 (department is None or department == p.department)
                 )
-        full_select.extend(ideas)
+            full_select.extend(ideas)
     
-    #user = User.query.filter_by(username=username).first()
     return render_template('search.html' , full_select=full_select)
 
 
