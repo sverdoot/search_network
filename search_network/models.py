@@ -22,6 +22,14 @@ class Project(db.Entity):
     areas = Set('Area', nullable=True)
     requested_by = Set('Person', nullable=True)
     content = Optional(str)
+    planned_meetings = Set('Meeting')
+
+
+class Meeting(db.Entity):
+    id = PrimaryKey(int, auto=True)
+    project = Optional(Project)
+    time = Optional(datetime)
+    place = Optional(str)
 
 
 class Person(db.Entity):

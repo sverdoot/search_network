@@ -57,6 +57,31 @@
            {%endfor%}
         </ul>
     </div>
+
+    <div class="media-body">
+        <b>Planned meetings</b>
+        <table>
+            <tr>
+                <th> When </th>
+                <th> Where </th>
+            </tr>
+            <tr>
+                <th> Tomorrow </th>
+                <th> <a href="zoom.com">Zoom </a></th>
+            </tr>
+            {% for meeting in project.meetings %}
+                <tr>
+                    <th>
+                        {{meeting.time.strftime('%d %m %Y')}}
+                    </th>
+                    <th>
+                        {{meeting.place }}
+                    </th>
+
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
     {% if project.persons.count() > 0 %}
         <div class='circle-container'>
             <a class='center'>{{ project.name }}</a>

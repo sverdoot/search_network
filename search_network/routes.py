@@ -6,7 +6,7 @@ from collections import defaultdict
 from PIL import Image
 from search_network.form import SearchForm, NewProjectForm, NewIdeaForm
 from flask import Flask,  render_template , url_for , redirect , flash, request, abort , jsonify
-from search_network.models import Person, Project, Idea, Department
+from search_network.models import Person, Project, Idea, Department, Message
 from search_network import app, db
 from pony.orm import *
 
@@ -314,13 +314,12 @@ def search():
 #     return     
 
 
-# @app.route("/chatting/<int:user_id>" , methods=['GET' , 'POST'])
+# @app.route("/chat/<int:user_id>" , methods=['GET' , 'POST'])
 # @login_required
 # def chat(user_id):
-#     user = User.query.filter_by(id=user_id).first_or_404()
-#     messages = Chats.query.filter(or_(and_(Chats.sender_id == user_id , 
-#         Chats.reciever_id == current_user.id) , and_(Chats.sender_id == current_user.id,
-#       Chats.reciever_id == user_id) )).all()
+#     current_user = Person.get(id=1)
+#     user = Person.get(id)
+#     messages = select(m for m in Message if ((m.sender_id == current_user_id) and (m.receiver_id == ))
 #     return render_template('chat.html' , messages=messages ,
 #      user=current_user, friend=user )
 
