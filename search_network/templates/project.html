@@ -26,7 +26,8 @@
     .deg315 { transform: rotate(315deg) translate(12em) rotate(-315deg); }
 </style>
 
-<body style="text-align: center">
+<body style="text-align: center; display: grid; grid-template-columns: 2fr 1fr">
+    <div>
     <div>
         <h1>Project {{project.name}}</h1>
         <p><it>By:</it> {{project.department}}</p>
@@ -34,6 +35,7 @@
     <div class="media-body" cellspacing="2" border="1" cellpadding="5">
         <b>People, involved in it:</b>
         <ul>
+            <li>Person 1</li>
             {% for result in project.persons.limit(10) %}
                 <li><a href="{{ urlfor('persons', person_id=result.id)}}">{{result.name}} {{result.surname}}</a></li>
             {%endfor%}
@@ -43,6 +45,7 @@
     <div class="media-body">
     <b>Skills,required to participate in it</b>
        <ul>
+        <li>Openmindness</li>
        {% for result in project.skills %}
            <li>{{result.name}}</li>
        {%endfor%}
@@ -50,8 +53,9 @@
     </div>
 
     <div class="media-body">
-        <b>Areas,required to participate in it</b>
+        <b>Areas,related to project</b>
         <ul>
+            <li> CV </li>
            {% for result in project.areas %}
                <li>{{result.name}}</li>
            {%endfor%}
@@ -82,17 +86,18 @@
             {% endfor %}
         </table>
     </div>
-    {% if project.persons.count() > 0 %}
+    </div>
+{#    {% if project.persons.count() > 0 %}#}
         <div class='circle-container'>
-            <a class='center'>{{ project.name }}</a>
-            <a class='deg0'>{{ project.persons.page(1, pagesize=1).name }} {{ project.persons.page(1, pagesize=1).name }}</a>
-            <a class='deg45'>{{ project.persons.page(2, pagesize=1).name }} {{ project.persons.page(2, pagesize=1).name }}</a>
-            <a class='deg135'>{{ project.persons.page(3, pagesize=1).name }} {{ project.persons.page(3, pagesize=1).name }}</a>
-            <a class='deg180'>{{ project.persons.page(4, pagesize=1).name }} {{ project.persons.page(4, pagesize=1).name }}</a>
-            <a class='deg225'>{{ project.persons.page(5, pagesize=1).name }} {{ project.persons.page(5, pagesize=1).name }}</a>
-            <a class='deg315'>{{ project.persons.page(6, pagesize=1).name }} {{ project.persons.page(6, pagesize=1).name }}</a>
+            <a class='center'><b>{{ project.name }}</b></a>
+            <a class='deg0'><i>Leader name</i></a>
+            <a class='deg45'><i>Maintainer 1</i></a>
+            <a class='deg135'><i>Maintainer 2</i></a>
+            <a class='deg180'><i>Maintainer 3</i></a>
+            <a class='deg225'><i>Maintainer 4</i></a>
+            <a class='deg315'><i>Maintainer 5</i></a>
         </div>
-    {% endif %}
+{#    {% endif %}#}
 </body>
 
 
