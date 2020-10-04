@@ -1,38 +1,74 @@
 {% extends "layout.html" %}
 {% block content %}
+
+<style>
+    .numberCircle {
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        padding: 8px;
+
+        background: #fff;
+        border: 2px solid #666;
+        color: #666;
+        text-align: center;
+
+        font: 20px Arial, sans-serif;
+    }
+</style>
+
+<header style="display:grid; grid-template-columns: 3fr 1fr">
+    <div>
+        <h1>{{person.name}} {{person.surname}}</h1>
+        <a><b><i>{{person.department.name}}</i></b> department</a>
+        <br>
+        <a><i>Now in room №</i></a>
+    </div>
+    <div>
+        <div class="numberCircle">
+            5
+        </div>
+        <br>
+        <form action="mailto:{{person.mail}}">
+            <input type="submit" value="Send email" />
+        </form>
+        <br>
+        <form action="https://google.com">
+            <input type="submit" value="Go to chat" />
+        </form>
+    </div>
+</header>
+
+<br>
 <body style="text-align: center">
 
-<header>
-    <h1>{{person.name}} {{person.surname}}</h1>
-    <i>mail:{{person.mail}}</i>
-</header>
-<p>Works in {{person.department}}</p>
-
-<p>Person Projects:</p>
 <div class="media-body">
-   <ul>
-   {% for result in person.projects %}
-       <li>{{result}}</li>
-   {%endfor%}
-   </ul>
+    <b>Person Projects:</b>
+    <ul>
+        {% for result in person.projects %}
+            <li><a href="{{ urlfor('projects', project_id = project.id)}}">{{result.name}}</a></li>
+        {%endfor%}
+    </ul>
 </div>
 
-<p>Person Ideas:</p>
 <div class="media-body">
-   <ul>
-   {% for result in person.ideas %}
-       <li>{{result}}</li>
-   {%endfor%}
-   </ul>
+    <b>Person Ideas:</b>
+    <ul>
+        {% for result in person.ideas %}
+            <li><a href="{{ urlfor('ideas', idea_id = idea.id)}}">{{result.name}}</a></li>
+        {%endfor%}
+    </ul>
 </div>
 
-<p>Skills:</p>
+
 <div class="media-body">
-   <ul>
-   {% for result in person.skills %}
-       <li>{{result.name}}</li>
-   {%endfor%}
-   </ul>
+    <b>Person skills:</b>
+    <ul>
+        {% for result in person.skills %}
+            <li><a>{{result.name}}</a></li>
+        {%endfor%}
+    </ul>
 </div>
+
 </body>
 {% endblock content %}

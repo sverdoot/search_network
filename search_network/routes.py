@@ -1,6 +1,8 @@
 import os , json
 import functools
 import secrets
+from collections import defaultdict
+
 from PIL import Image
 from search_network.form import SearchForm, NewProjectForm, NewIdeaForm
 from flask import Flask,  render_template , url_for , redirect , flash, request, abort , jsonify
@@ -176,21 +178,21 @@ def new_idea():
     return render_template('New_idea.html' , title='New idea' , form=form , legend='Create idea')    
 
 
-@app.route("/projects/<int:project_id>")
-def project(project_id):
-    project = Project.get(id=project_id)
+@app.route("/projects/<int:id>")
+def project(id):
+    project = Project.get(id=id)
     return render_template('project.html' , name=project.name , project=project)
 
 
-@app.route("/persons/<int:person_id>")
-def person(person_id):
-    person = Person.get(id=person_id)
+@app.route("/persons/<int:id>")
+def person(id):
+    person = Person.get(id=id)
     return render_template('person.html', name=person.name , person=person)
 
 
-@app.route("/ideas/<int:idea_id>")
-def idea(idea_id):
-    idea = Idea.get(id=idea_id)
+@app.route("/ideas/<int:id>")
+def idea(id):
+    idea = Idea.get(id=id)
     return render_template('idea.html', name=idea.name , idea=idea)
 
 
@@ -283,29 +285,28 @@ def search():
     department = features_['department'] if 'department' in features_.keys() else None
     print(name, skills, areas, department)
 
-    full_select = []
-    if 'persons' not in features_.keys() or features_['persons']:
+    full_select = defaultdict(list)
+    if 'persons' in features_.keys():
         persons = select(p for p in Person if (name == 'none' or name == p.name) and
                          ((not skills) or (p.skills.select(lambda x: x.name in skills).count() > 0)) and
                          ((not areas) or (p.areas.select(lambda x: x.name in areas).count() > 0)) and
                          ((department is None) or department == p.department.name)
                          )[:]
-        full_select.extend(persons)
+        full_select['person'].extend(persons)
         print(full_select)
-    if 'projects' not in features_.keys() or features_['projects']:
+    if 'projects' in features_.keys():
         projects = select(p for p in Project if (name == 'none' or name == p.name) and
                           ((not skills) or (p.skills.select(lambda x: x.name in skills).count() > 0)) and
-                          ((not areas) or (p.areas.select(lambda x: x.name in areas).count() > 0)) and
-                          ((department is None) or department == p.department.name)
+                          ((not areas) or (p.areas.select(lambda x: x.name in areas).count() > 0))
                           )[:]
-        full_select.extend(projects)
-    if 'ideas' not in features_.keys() or features_['ideas']:
+        full_select['project'].extend(projects)
+        print(full_select)
+    if 'ideas' in features_.keys():
         ideas = select(p for p in Idea if (name == 'none' or name == p.name) and
                        ((not skills) or (p.skills.select(lambda x: x.name in skills).count() > 0)) and
-                       ((not areas) or (p.areas.select(lambda x: x.name in areas).count() > 0)) and
-                       ((department is None) or department == p.department.name)
+                       ((not areas) or (p.areas.select(lambda x: x.name in areas).count() > 0))
                        )[:]
-        full_select.extend(ideas)
+        full_select['idea'].extend(ideas)
     print(full_select)
     return render_template('search.html', full_select=full_select)
 

@@ -28,9 +28,10 @@
     }
 
     .search_result__header{
+        padding: 5px;
         display: grid;
-        grid-template-columns: 2fr 1fr;
-        margin-left: 100px;
+        grid-template-columns: 1fr 3fr 1fr;
+        margin-left: auto;
         margin-right: auto;
         text-align: left;
         height: 20px;
@@ -48,43 +49,46 @@
 <body style="background-color: #98E97B" >
     {% if full_select %}
     <article class="media content-section" style="display: grid">
-        {% for result in full_select %}
-            <div class="search_result">
-                <div class="search_result__header">
-                    <div style="display: grid">
-                        <b>{{ result.name }} {{ result.surname }}</b>
-                        <a><i>Department</i>: {{ result.department.name }}</a>
-                     </div>
-                    <div style="align-items: center; display: grid; grid-template-columns: 1fr 1fr;">
-                        <form action={{ url_for("person", person_id=result.id) }}>
-                            <input type="submit" value="Go to profile" />
-                        </form>
-                        <form action="https://google.com">
-                            <input type="submit" value="Go to chat" />
-                        </form>
+        {% for k, results in full_select.items() %}
+            {% for result in results %}
+                <div class="search_result">
+                    <div class="search_result__header">
+                        <div><i>{{ k }}</i></div>
+                        <div style="display: grid">
+                            <b>{{ result.name }} {{ result.surname }}</b>
+                            <a><i>Department</i>: {{ result.department.name }}</a>
+                         </div>
+                        <div style="align-items: center; display: grid; grid-template-columns: 1fr 1fr;">
+                            <form action={{ url_for(k, id=result.id) }}>
+                                <input type="submit" value="Go to profile" />
+                            </form>
+                            <form action="https://google.com">
+                                <input type="submit" value="Go to chat" />
+                            </form>
+                        </div>
                     </div>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr;">
-                    <div class= "search_result__list">
-                            <b><i>Skills</i></b>:
-                            <ul>
-                                {% for skill in result.skills.random(5) %}
-                                <li>{{ skill.name}}</li>
-                                {% endfor %}
-                             </ul>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr;">
+                        <div class= "search_result__list">
+                                <b><i>Skills</i></b>:
+                                <ul>
+                                    {% for skill in result.skills.random(5) %}
+                                    <li>{{ skill.name}}</li>
+                                    {% endfor %}
+                                 </ul>
+                        </div>
+                        <div class= "search_result__list">
+                                <b><i>Areas of interest</i></b>:
+                                <ul>
+                                    {% for area in result.areas.random(5) %}
+                                    <li>{{ area.name}}</li>
+                                    {% endfor %}
+                                 </ul>
+                        </div>
                     </div>
-                    <div class= "search_result__list">
-                            <b><i>Areas of interest</i></b>:
-                            <ul>
-                                {% for area in result.areas.random(5) %}
-                                <li>{{ area.name}}</li>
-                                {% endfor %}
-                             </ul>
-                    </div>
-                </div>
 
-            </div>
-            <hr>
+                </div>
+                <hr>
+            {% endfor %}
         {%  endfor %}
      </article>
     {% else %}
