@@ -174,20 +174,20 @@ def new_idea():
 
 @app.route("/projects/<int:project_id>")
 def project(project_id):
-    project = Project.query.get_or_404(project_id)
-    return render_template( 'project.html' , name=project.name , project=project)
+    project = Project.get(id=project_id)
+    return render_template('project.html' , name=project.name , project=project)
 
 
 @app.route("/persons/<int:person_id>")
 def person(person_id):
-    person = Person.query.get_or_404(person_id)
-    return render_template( 'person.html' , name=person.name , person=person)
+    person = Person.get(id=person_id)
+    return render_template('person.html', name=person.name , person=person)
 
 
 @app.route("/ideas/<int:idea_id>")
-def idea(person_id):
-    idea = Idea.query.get_or_404(idea_id)
-    return render_template( 'idea.html' , name=idea.name , idea=idea)
+def idea(idea_id):
+    idea = Idea.get(id=idea_id)
+    return render_template('idea.html', name=idea.name , idea=idea)
 
 
 

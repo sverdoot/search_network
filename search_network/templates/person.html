@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block content %}
+<body style="text-align: center">
+
+<header>
+    <h1>{{person.name}} {{person.surname}}</h1>
+    <i>mail:{{person.mail}}</i>
+</header>
+<p>Works in {{person.department}}</p>
+
+<p>Person Projects:</p>
+<div class="media-body">
+   <ul>
+   {% for result in person.projects %}
+       <li>{{result}}</li>
+   {%endfor%}
+   </ul>
+</div>
+
+<p>Person Ideas:</p>
+<div class="media-body">
+   <ul>
+   {% for result in person.ideas %}
+       <li>{{result}}</li>
+   {%endfor%}
+   </ul>
+</div>
+
+<p>Skills:</p>
+<div class="media-body">
+   <ul>
+   {% for result in person.skills %}
+       <li>{{result.name}}</li>
+   {%endfor%}
+   </ul>
+</div>
+</body>
+{% endblock content %}

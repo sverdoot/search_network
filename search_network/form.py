@@ -68,16 +68,18 @@ from search_network.models import Person, Project, Idea, Department, Area
 #     content = TextAreaField('Content' , validators=[DataRequired()])
 #     submit = SubmitField('Post')
 
+
 class NewProjectForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()]) 
     image = FileField('Attach a picture..', validators=[FileAllowed(['jpg', 'png'])]) 
     content = TextAreaField('Content' , validators=[DataRequired()])
     submit = SubmitField('Project')
 
+
 class NewIdeaForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()]) 
     image = FileField('Attach a picture..', validators=[FileAllowed(['jpg', 'png'])]) 
-    content = TextAreaField('Content' , validators=[DataRequired()])
+    content = TextAreaField('Content', validators=[DataRequired()])
     submit = SubmitField('Idea')    
 
 
@@ -92,7 +94,7 @@ class NewIdeaForm(FlaskForm):
 
 
 class SearchForm(FlaskForm):
-    searched = StringField('Search' , validators=[DataRequired()])
+    searched = StringField('Search', validators=[DataRequired()])
     submit = SubmitField('Search')
 
 

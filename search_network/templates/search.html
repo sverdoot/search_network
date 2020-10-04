@@ -1,20 +1,99 @@
 {% extends "layout.html" %}
 {% block content %}
-{% if user %}
-<article class="media content-section">
-             <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}">
-          <div class="media-body">
-                          <a class="mr-2" href="{{ url_for('user_account' , username= user.username) }}">{{ user.username }}</a>
-<h2><a class="article-title" >{{ user.username }}</a></h2>
-            <p class="article-content" style="color: #707171 ; "> oops! </p>
-          </div>
-        </article>
-{% else %}
-<article class="media content-section">
-          <div class="media-body">
-<h2><a class="article-title" >Sorry no one matches with the username searched!</a></h2>
-            <p class="article-content" style="color: #707171 ; "> oops! </p>
-          </div>
-        </article>
-{% endif %}      
-{% endblock content %}
+<style>
+    .header{
+        color: #004461;
+        text-align: center;
+    }
+    .rectangle{
+        display: flex;
+        align-content: center;
+        height: 100px;
+        width: 200px;
+        background-color: #555;
+    }
+
+    .search_result {
+        display: grid;
+        grid-template-rows: auto auto auto;
+        text-align: center;
+        margin-left: 100px;
+        margin-right: auto;
+        padding: 5px 5px;
+        border: 2px solid;
+        height: 200px;
+        width: 600px;
+        background-color: #98E97B;
+        border-radius: 10px;
+    }
+
+    .search_result__header{
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        margin-left: 100px;
+        margin-right: auto;
+        text-align: left;
+        height: 20px;
+    }
+
+    .search_result__list{
+        padding-top: 5px;
+        margin-left: 50px;
+        margin-right: 50px;
+        text-align: left;
+    }
+
+</style>
+
+<body style="background-color: #98E97B" >
+    {% if full_select %}
+    <article class="media content-section" style="display: grid">
+        {% for result in full_select %}
+            <div class="search_result">
+                <div class="search_result__header">
+                    <div style="display: grid">
+                        <b>{{ result.name }} {{ result.surname }}</b>
+                        <a><i>Department</i>: {{ result.department.name }}</a>
+                     </div>
+                    <div style="align-items: center; display: grid; grid-template-columns: 1fr 1fr;">
+                        <form action={{ url_for("person", person_id=result.id) }}>
+                            <input type="submit" value="Go to profile" />
+                        </form>
+                        <form action="https://google.com">
+                            <input type="submit" value="Go to chat" />
+                        </form>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr;">
+                    <div class= "search_result__list">
+                            <b><i>Skills</i></b>:
+                            <ul>
+                                {% for skill in result.skills.random(5) %}
+                                <li>{{ skill.name}}</li>
+                                {% endfor %}
+                             </ul>
+                    </div>
+                    <div class= "search_result__list">
+                            <b><i>Areas of interest</i></b>:
+                            <ul>
+                                {% for area in result.areas.random(5) %}
+                                <li>{{ area.name}}</li>
+                                {% endfor %}
+                             </ul>
+                    </div>
+                </div>
+
+            </div>
+            <hr>
+        {%  endfor %}
+     </article>
+    {% else %}
+    <article class="media content-section">
+              <div class="media-body">
+    <h2><a class="article-title" >Sorry no one matches with the username searched!</a></h2>
+                <p class="article-content" style="color: #707171 ; "> oops! </p>
+              </div>
+            </article>
+    {% endif %}
+</body>
+{%  endblock %}

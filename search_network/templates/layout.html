@@ -19,8 +19,8 @@
         <title>SHREK2 for NVIDIA</title>
     {% endif %}
 </head>
-<body style="background-color: #98E97B">
-    <header class="site-header">
+<body style="background-color: #98E97B; display: grid; grid-template-rows: 1fr 1fr auto"">
+    <header class="site-header" style="height: 50px">
       <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top" style="background-color: #3DB214;" >
         <div class="container" style="background-color:  #3DB214;">
           <a class="navbar-brand " style="font-family: Futura, Trebuchet MS, Arial, sans-serif; font-size: 33px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 16.4px;  letter-spacing: 1px; color: white ;" href="/">SHREK2 for NVIDIA</a>
@@ -43,6 +43,7 @@
         </div>
       </nav>
     </header>
+    <hr>
      <main role="main" class="container" style="background-color: #98E97B">
       <div class="row" style="">        
         <div class="col-md-8" style="">
@@ -54,8 +55,8 @@
                 </div>
               {% endfor %}
             {% endif %}
-          {% endwith %}          
-                       {% block content %}{% endblock %}          
+          {% endwith %}
+            {% block content %}{% endblock %}
         </div>   
       </div>
     </main>

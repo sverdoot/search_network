@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block content %}
+<body style="text-align: center">
+
+<title>Project {{object.name}}</title>
+<p>Project is related to {{object.department}}</p>
+<p>People, involved in it:</p>
+<div class="media-body" cellspacing="2" border="1" cellpadding="5">
+    <table style="width:50%">
+    {% for result in objects.persons %}
+        <tr>
+        <td>{{result.name}} {{result.surname}}</td>
+        <td>Link</td>
+        </tr>
+    {%endfor%}
+    </table>
+</div>
+
+<p>Skills,required to participate in it</p>
+<div class="media-body">
+   <ul>
+   {% for result in objects.skills %}
+       <li>{{result}}</li>
+   {%endfor%}
+   </ul>
+</div>
+
+<p>Areas,required to participate in it</p>
+<div class="media-body">
+   <ul>
+   {% for result in objects.areas %}
+       <li>{{result}}</li>
+   {%endfor%}
+   </ul>
+</div>
+</body>
+{% endblock content %}
