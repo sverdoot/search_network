@@ -25,3 +25,11 @@ default:
     -  <localhost>/database : raw content of the test database
 
 <localhost> is often http://127.0.0.1:5000.
+
+
+Search filters
+--------------
+
+Search by name: "William"
+
+Search with filters: "none, persons True, projects True, ideas False, skills Linux, Automation"
