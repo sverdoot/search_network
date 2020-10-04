@@ -31,4 +31,5 @@ Search filters
 --------------
 
 Search by name: "William"
+
 Search with filters: "none, persons True, projects True, ideas False, skills Linux, Automation"
