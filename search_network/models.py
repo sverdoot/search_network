@@ -15,14 +15,13 @@ db = Database()
 class Project(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str, unique=True)
-    department = Required('Department')
+    #department = Required('Department')
+    department = Optional('Department')
     persons = Set('Person', reverse='projects', nullable=True)
     skills = Set('Skill', nullable=True)
     areas = Set('Area', nullable=True)
     requested_by = Set('Person', nullable=True)
-
-    # def get_skills(self):
-    #     return 
+    content = Optional(str)
 
 
 class Person(db.Entity):
@@ -37,22 +36,18 @@ class Person(db.Entity):
     in_waiting_list = Set('Project', reverse='requested_by', nullable=True)
     areas = Set('Area')
 
-    def get_skills():
-        skill_names = []
-        for skill in skills:
-            skill_names.append(skill.name)
-        return skill_names
-
 
 class Idea(db.Entity):
     id = PrimaryKey(int, auto=True)
     name = Required(str, unique=True)
     likes = Optional(int, nullable=True)
     dislikes = Optional(int, nullable=True)
-    inventor = Required(Person)
+    #inventor = Required(Person)
+    inventor = Optional(Person)
     areas = Set('Area', nullable=True)
     skills = Set('Skill', nullable=True)
     department = Optional('Department')
+    content = Optional(str)
 
 
 class Department(db.Entity):
@@ -102,7 +97,6 @@ def populate_database():
     all_skills = []
 
     for _, row in df.iterrows():
-        #print(row['skills'])
         name = row['Name'].split(' ')
         mail = row['mail']
         dept = row['dept']
@@ -112,7 +106,6 @@ def populate_database():
             departments.append(Department(name=dept))
         for skill in skills:
             if select(s for s in Skill).count() == 0 or Skill.get(name=skill) is None:
-                #print(skill)
                 all_skills.append(Skill(name=skill))
         department = select(d for d in Department if d.name == dept)[:][0]
         employees.append(Person(name=name[0], surname=name[1], mail=mail, department=department, areas=[], skills=select(s for s in Skill if s.name in skills)[:]))

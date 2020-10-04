@@ -139,37 +139,41 @@ def save_picture(form_picture,x,y,folder):
 @app.route("/projects")
 @app.route("/projects/new" , methods=[ 'POST' , 'GET'])
 #@login_required
+@db_session
 def new_project():
     form = NewProjectForm()
     if form.validate_on_submit():
         if form.image.data:
            projectimage_file = save_picture(form.image.data, 500 , 500 , 'project_pictures')
         else:
-            projectimage_file = None
-        project = Project(title=form.title.data, content=form.content.data, author=current_user, image=postimage_file )
-        db.session.add(project)
-        db.session.commit()
-        flash('Your project has been created!', 'success')
+            projectimage_file = None   
+        project = Project(name=form.title.data, content=form.content.data) #, image=projectimage_file )
+        db.commit()
+        #db.session.add(project)
+        #db.session.commit()
+        flash('Your project has been created!', 'success')                    
         return redirect(url_for('home'))
     return render_template('New_project.html' , title='New project' , form=form , legend='Create project')
 
 
-@app.route("/projects")
+@app.route("/ideas")
 @app.route("/ideas/new" , methods=[ 'POST' , 'GET'])
 #@login_required
+@db_session
 def new_idea():
     form = NewIdeaForm()
     if form.validate_on_submit():
         if form.image.data:
            ideaimage_file = save_picture(form.image.data, 500 , 500 , 'idea_pictures')
         else:
-            ideaimage_file = None
-        idea = Idea(title=form.title.data, content=form.content.data, author=current_user, image=postimage_file )
-        db.session.add(idea)
-        db.session.commit()
-        flash('Your idea has been created!', 'success')
+            ideaimage_file = None   
+        idea = Idea(name=form.title.data, content=form.content.data) #, image=ideaimage_file )
+        db.commit()
+        #db.session.add(idea)
+        #db.session.commit()
+        flash('Your idea has been created!', 'success')                    
         return redirect(url_for('home'))
-    return render_template('New_idea.html' , title='New idea' , form=form , legend='Create idea')
+    return render_template('New_idea.html' , title='New idea' , form=form , legend='Create idea')    
 
 
 @app.route("/projects/<int:project_id>")
@@ -304,6 +308,7 @@ def search():
         full_select.extend(ideas)
     print(full_select)
     return render_template('search.html', full_select=full_select)
+
 
 
 # @app.route("/chats")
