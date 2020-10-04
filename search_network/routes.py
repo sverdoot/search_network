@@ -5,16 +5,8 @@ from PIL import Image
 from search_network.form import SearchForm, NewProjectForm, NewIdeaForm
 from flask import Flask,  render_template , url_for , redirect , flash, request, abort , jsonify
 from search_network.models import Person, Project, Idea, Department
-from search_network import app, db, socketio, mail, bcrypt, mobility
-from flask_socketio import send , disconnect
-from flask_mail import Message
-from flask_mobility.decorators import mobile_template
-from sqlalchemy import or_ ,and_
-from validate_email import validate_email
-
+from search_network import app, db
 from pony.orm import *
-
-
 
 
 @app.route("/")
